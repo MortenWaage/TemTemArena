@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TemTemArena.Scripts.Data;
+using TemTemArena.Scripts.GUI;
 using TemTemArena.Scripts.Singletons;
 
 namespace TemTemArena
@@ -24,13 +25,14 @@ namespace TemTemArena
             {
                 ShowGameInfo();
 
-                string command = Console.ReadLine();
+                string command = GUI.ReadLine();
+
                 if (command == "exit") Stop();
                 else if (command == "attack")
                     foreach (var TemTem in TemTemDex.TemTemListe.ActiveTemTems)
                     {
                         var damage = TemTem.Attack();
-                        CauseDamage(damage, TemTem.IsNPC);
+                        CauseDamage(damage);
                     }
 
                 Console.Read();
@@ -38,12 +40,11 @@ namespace TemTemArena
             }
         }
 
-        private void CauseDamage(float damage, bool isNpc)
+        private void CauseDamage(float damage)
         {
             foreach (var TemTem in TemTemDex.TemTemListe.ActiveTemTems)
             {
                 if (TemTem.IsFainted) continue;
-                if (TemTem.IsNPC == isNpc) continue;
                 TemTem.LooseHealth(damage);
             }
         }
@@ -52,7 +53,8 @@ namespace TemTemArena
 
         public void ShowGameInfo()
         {
-            Game.Manager.Renderer.AddMessage(Align.Left, Messages.AvailableCommands);
+            GUI.AddEntry(EntryType.Command, Messages.AvailableCommands);
+            GUI.Refresh();
         }
     }
 }

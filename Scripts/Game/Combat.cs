@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TemTemArena.Scripts.Data;
+using TemTemArena.Scripts.GUI;
+using TemTemArena.Scripts.Singletons;
 
 namespace TemTemArena
 {
@@ -10,21 +13,21 @@ namespace TemTemArena
     {
         public static Ability ChooseAbility(List<Ability> abilities)
         {
-            string availableabilities = "";
+            string[] availableabilities = new string[abilities.Count];
             var i = 1;
             foreach (var normalattaks in abilities)
             {
                 var ability = Techniques.abilityNames[normalattaks];
-                availableabilities += $"{i}) {ability}\n";
+                availableabilities[i - 1] += $"{i}) {ability}";
                 i++;
             }
 
             bool ChooseAbility = false;
             while (!ChooseAbility)
             {
-                Console.WriteLine("Available attacks actions are:");
-                Console.WriteLine(availableabilities);
-                Console.WriteLine("Choose ability 1, 2 or 3");
+                string[] message = GUI.CreateMessage(availableabilities);
+                GUI.AddEntry(EntryType.Command, message, true);
+
                 var selectedAbility = Console.ReadLine();
 
                 var success = Int32.TryParse(selectedAbility, out int index);
